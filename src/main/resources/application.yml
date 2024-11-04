@@ -1,1 +1,5 @@
-spring.application.name=spring-mongo
+server:
+  port: 8081
+spring:
+  application:
+    name: spring-mongodb

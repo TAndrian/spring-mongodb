@@ -43,5 +43,5 @@ public interface UserService {
      *
      * @param userId reference.
      */
-    void delete(UUID userId);
+    void deleteUser(UUID userId);
 }
