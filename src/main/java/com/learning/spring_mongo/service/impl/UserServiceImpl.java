@@ -13,7 +13,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.UUID;
 
 @Service
 @AllArgsConstructor
@@ -30,51 +29,41 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDTO getUserById(UUID userId) {
+    public UserDTO getUserById(String userId) {
         return userMapper.toDTO(getUserDocumentById(userId));
     }
 
     @Override
     public UserDTO createUser(UserDTO userToCreate) {
-        UserDocument existingUser = getUserByFullName(userToCreate.fullName());
-        checkExistingUser(existingUser);
+        checkExistingUserByFullName(userToCreate.fullName());
         UserDocument userDocumentToCreate = userMapper.fromDTO(userToCreate);
         return userMapper.toDTO(userRepository.save(userDocumentToCreate));
     }
 
     /**
-     * Get user by its full name.
+     * Check user's existence by its full name and throw conflict error if user already exists.
      *
      * @param fullName user's full name.
-     * @return user.
      */
-    private UserDocument getUserByFullName(String fullName) {
-        return userRepository.findByFullName(fullName);
-    }
-
-    /**
-     * Check if user exists.
-     *
-     * @param user user to check.
-     */
-    private void checkExistingUser(UserDocument user) {
-        if (user != null) {
+    private void checkExistingUserByFullName(String fullName) {
+        userRepository.findTopByFullName(fullName).ifPresent(user -> {
+            log.info("User already exists with full name: {}", fullName);
             throw new ConflictException(
                     UserExceptionEnums.USER_ALREADY_EXISTS.getValue(),
                     UserExceptionEnums.USER_EXCEPTION_CODE.getValue()
             );
-        }
+        });
     }
 
     @Override
-    public UserDTO updateUser(UUID userId, UserDTO update) {
+    public UserDTO updateUser(String userId, UserDTO update) {
         UserDocument targetUserDocument = getUserDocumentById(userId);
         userMapper.updateUserDocumentFromDTO(update, targetUserDocument);
-        return userMapper.toDTO(targetUserDocument);
+        return userMapper.toDTO(userRepository.save(targetUserDocument));
     }
 
     @Override
-    public void deleteUser(UUID userId) {
+    public void deleteUser(String userId) {
         UserDocument targetUserDocument = getUserDocumentById(userId);
         userRepository.delete(targetUserDocument);
     }
@@ -86,7 +75,7 @@ public class UserServiceImpl implements UserService {
      * @param userId reference.
      * @return user if it is present.
      */
-    private UserDocument getUserDocumentById(UUID userId) {
+    private UserDocument getUserDocumentById(String userId) {
         return userRepository.findById(userId).orElseThrow(() -> {
                     log.info(USER_NOT_FOUND_LOG, userId);
                     return new NotFoundException(

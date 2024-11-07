@@ -11,8 +11,8 @@ vault:
   token: ${VAULT_DEV_ROOT_TOKEN_ID}
   config:
     lifecycle:
-      enabled: true  # Active le cycle de vie de Vault pour renouveler le token automatiquement
+      enabled: true
     ssl:
-      enabled: false  # Pour le mode dev; en production, active SSL si nécessaire
+      enabled: false
   kv:
-    enabled: true  # Active la lecture de secrets dans Vault
+    enabled: true

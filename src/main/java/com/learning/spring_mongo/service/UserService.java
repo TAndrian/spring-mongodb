@@ -19,7 +19,7 @@ public interface UserService {
      * @param userId user's reference.
      * @return corresponding user by userId reference.
      */
-    UserDTO getUserById(UUID userId);
+    UserDTO getUserById(String userId);
 
     /**
      * Create user form userToCreate DTO data.
@@ -36,12 +36,12 @@ public interface UserService {
      * @param update data.
      * @return updated user.
      */
-    UserDTO updateUser(UUID userId, UserDTO update);
+    UserDTO updateUser(String userId, UserDTO update);
 
     /**
      * Delete targeted user referenced by userId.
      *
      * @param userId reference.
      */
-    void deleteUser(UUID userId);
+    void deleteUser(String userId);
 }

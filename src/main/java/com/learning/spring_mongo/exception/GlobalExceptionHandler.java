@@ -23,6 +23,14 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(exceptionResponse, HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ResponseEntity<ExceptionResponse> handleConflictException(ConflictException exception) {
+        ExceptionResponse exceptionResponse = getExceptionResponse(exception, exception.getCode());
+        exceptionResponse.setStatusCode(HttpStatus.CONFLICT.value());
+        return new ResponseEntity<>(exceptionResponse, HttpStatus.CONFLICT);
+    }
+
     /**
      * Format custom error response into JSON format.
      *
