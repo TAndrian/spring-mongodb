@@ -18,7 +18,7 @@ services:
       VAULT_DEV_LISTEN_ADDRESS: ${VAULT_DEV_LISTEN_ADDRESS}
     ports:
       - "8200:8200"
-    command: server -dev -dev-root-token-id=root
+    command: ${VAULT_DEV_COMMAND}
 
   app:
     build:
