@@ -74,7 +74,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void delete(UUID userId) {
+    public void deleteUser(UUID userId) {
         UserDocument targetUserDocument = getUserDocumentById(userId);
         userRepository.delete(targetUserDocument);
     }
